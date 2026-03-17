@@ -18,7 +18,7 @@ InfraKitchen runs OpenTofu (`tofu`) during dry-run, apply, destroy, and output e
 
 ## Test Modules (`test/`)
 
-- `test/01-variable-types`: Validates InfraKitchen handling of multiple Terraform variable types.
+- `test/01-variable-types`: Validates InfraKitchen handling of multiple variable types.
 - `test/02-long-running`: Validates InfraKitchen stability during a long-running `apply`.
 - `test/03-intentional-failure`: Validates InfraKitchen behavior when a module fails intentionally.
 - `test/04-parent-child-outputs`: Validates parent-child module output wiring and inheritance behavior.

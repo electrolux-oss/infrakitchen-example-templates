@@ -43,7 +43,7 @@ resource "aws_security_group" "redis" {
 
   tags = merge(var.tags, {
     Name      = "${var.name}-redis-sg"
-    ManagedBy = "terraform"
+    ManagedBy = "InfraKitchen"
   })
 }
 

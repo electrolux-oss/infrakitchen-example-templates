@@ -20,7 +20,7 @@ resource "aws_iam_role" "cicd_admin" {
 
   tags = merge(var.tags, {
     Environment = var.environment_name
-    ManagedBy   = "terraform"
+    ManagedBy   = "InfraKitchen"
   })
 }
 

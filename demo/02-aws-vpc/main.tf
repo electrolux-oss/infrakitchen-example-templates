@@ -11,7 +11,7 @@ locals {
   base_tags = merge(var.tags, {
     Name        = var.name
     Environment = "shared"
-    ManagedBy   = "terraform"
+    ManagedBy   = "InfraKitchen"
   })
 }
 
