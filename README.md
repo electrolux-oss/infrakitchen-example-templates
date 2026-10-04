@@ -9,6 +9,10 @@ InfraKitchen runs OpenTofu (`tofu`) during dry-run, apply, destroy, and output e
 
 ## Demo Modules (`demo/`)
 
+### Local (no cloud)
+
+- `demo/00-dummy`: Dummy module for demonstrating plan and apply. Uses only the `random` provider and built-in `terraform_data`, so it needs no cloud provider or credentials.
+
 ### AWS Chain
 
 - `demo/01-aws-account`: Account bootstrap wrapper.
