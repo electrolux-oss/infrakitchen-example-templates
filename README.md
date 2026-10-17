@@ -1,9 +1,10 @@
 # InfraKitchen Modules
 
-This repository is split into three groups:
+This repository is split into four groups:
 
 - `demo/`: Cloud-usable wrapper modules
 - `dummy/`: No-cloud AWS-shaped modules (the `demo/` AWS chain plus EKS, RDS PostgreSQL and workload wiring)
+- `executors/`: Dummy task modules for InfraKitchen executors (no cloud)
 - `test/`: Focused test modules for validating InfraKitchen behavior
 
 InfraKitchen runs OpenTofu (`tofu`) during dry-run, apply, destroy, and output extraction.
@@ -34,6 +35,13 @@ Modules `01`-`04` mirror the `demo/` AWS chain with the same variables and outpu
 - `dummy/07-eks-namespace`: Dummy Kubernetes namespace with a resource quota (`cluster_name` from `dummy/05-eks`).
 - `dummy/08-eks-service-account`: Dummy Kubernetes service account with an IRSA IAM role; outputs `iam_role_arn` (`cluster_name`/`oidc_provider_arn`/`oidc_issuer_url` from `dummy/05-eks`, `namespace` from `dummy/07-eks-namespace`).
 - `dummy/09-rds-postgres-credentials`: Dummy IAM database credentials, like `demo/04-aws-redis-iam`: an `rds_iam` PostgreSQL user plus an `rds-db:connect` policy attached to the service account role (`aws_iam_role_name` from `dummy/08-eks-service-account`'s `iam_role_name`; `db_instance_resource_id`/`db_instance_address`/`db_instance_port`/`db_name` from `dummy/06-rds-postgres`).
+## Executor Modules (`executors/`)
+
+One-off task modules meant to be run by InfraKitchen executors. They use only the `random` provider and built-in `terraform_data`, so they need no cloud provider or credentials. Each module sets all its variables per environment in `tfvars/{dev,staging,prod}.tfvars`, passed with `-var-file=tfvars/<env>.tfvars`.
+
+- `executors/01-db-migration`: Simulates applying database migrations.
+- `executors/02-data-import`: Simulates importing a dataset of records.
+- `executors/03-cleanup`: Simulates removing stale items from a target.
 
 ## Test Modules (`test/`)
 
@@ -45,7 +53,7 @@ Modules `01`-`04` mirror the `demo/` AWS chain with the same variables and outpu
 
 ## How To Validate In InfraKitchen
 
-Use this flow for any module in `demo/`, `dummy/` or `test/`:
+Use this flow for any module in `demo/`, `dummy/`, `executors/` or `test/`:
 
 1. Import the template from this repo.
 2. Create a resource (and parent resource first when required by module chain).
