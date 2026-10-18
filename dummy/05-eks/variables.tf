@@ -37,10 +37,10 @@ variable "endpoint_public_access" {
   default     = true
 }
 
-variable "public_access_cidrs" {
-  description = "CIDR blocks allowed to reach the public API endpoint"
+variable "enabled_cluster_log_types" {
+  description = "Control plane log types to enable"
   type        = list(string)
-  default     = ["0.0.0.0/0"]
+  default     = ["api", "audit"]
 }
 
 variable "node_subnet_tier" {

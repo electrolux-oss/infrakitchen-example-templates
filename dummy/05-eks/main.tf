@@ -48,7 +48,7 @@ resource "terraform_data" "cluster" {
     vpc_id                    = var.vpc_id
     subnet_tier               = "private"
     endpoint_public_access    = var.endpoint_public_access
-    public_access_cidrs       = var.public_access_cidrs
+    enabled_log_types         = var.enabled_cluster_log_types
     authentication_mode       = "API"
     tags                      = local.tags
   }
