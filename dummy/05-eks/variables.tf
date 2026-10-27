@@ -89,6 +89,50 @@ variable "max_size" {
   default     = 3
 }
 
+variable "cluster_create_seconds" {
+  description = "Simulated control plane creation time in seconds"
+  type        = number
+  default     = 300
+
+  validation {
+    condition     = var.cluster_create_seconds >= 0
+    error_message = "cluster_create_seconds must be >= 0."
+  }
+}
+
+variable "cluster_destroy_seconds" {
+  description = "Simulated control plane deletion time in seconds"
+  type        = number
+  default     = 120
+
+  validation {
+    condition     = var.cluster_destroy_seconds >= 0
+    error_message = "cluster_destroy_seconds must be >= 0."
+  }
+}
+
+variable "node_group_create_seconds" {
+  description = "Simulated managed node group creation time in seconds"
+  type        = number
+  default     = 180
+
+  validation {
+    condition     = var.node_group_create_seconds >= 0
+    error_message = "node_group_create_seconds must be >= 0."
+  }
+}
+
+variable "node_group_destroy_seconds" {
+  description = "Simulated managed node group deletion time in seconds"
+  type        = number
+  default     = 60
+
+  validation {
+    condition     = var.node_group_destroy_seconds >= 0
+    error_message = "node_group_destroy_seconds must be >= 0."
+  }
+}
+
 variable "tags" {
   description = "Tags applied to created resources"
   type        = map(string)

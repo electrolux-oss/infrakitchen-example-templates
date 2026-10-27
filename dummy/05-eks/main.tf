@@ -35,7 +35,21 @@ resource "terraform_data" "cluster_role" {
   }
 }
 
+# Simulates the ~10 min EKS control plane provisioning (and teardown on destroy).
+resource "time_sleep" "cluster" {
+  create_duration  = "${var.cluster_create_seconds}s"
+  destroy_duration = "${var.cluster_destroy_seconds}s"
+
+  triggers = {
+    cluster_id = random_id.cluster.hex
+  }
+
+  depends_on = [terraform_data.cluster_role]
+}
+
 resource "terraform_data" "cluster" {
+  depends_on = [time_sleep.cluster]
+
   input = {
     name                      = var.name
     arn                       = "arn:aws:eks:${var.region}:${var.account}:cluster/${var.name}"
@@ -96,7 +110,21 @@ resource "random_id" "node" {
   }
 }
 
+# Simulates managed node group provisioning: nodes launching and joining the cluster.
+resource "time_sleep" "node_group" {
+  create_duration  = "${var.node_group_create_seconds}s"
+  destroy_duration = "${var.node_group_destroy_seconds}s"
+
+  triggers = {
+    cluster_name  = terraform_data.cluster.output.name
+    node_role_arn = terraform_data.node_role.output.arn
+    desired_size  = var.desired_size
+  }
+}
+
 resource "terraform_data" "node_group" {
+  depends_on = [time_sleep.node_group]
+
   input = {
     name           = "${var.name}-default"
     cluster_name   = terraform_data.cluster.output.name
