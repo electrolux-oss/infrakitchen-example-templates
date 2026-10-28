@@ -50,6 +50,8 @@ One-off task modules meant to be run by InfraKitchen executors. They use only th
 - `test/03-intentional-failure`: Validates InfraKitchen behavior when a module fails intentionally.
 - `test/04-parent-child-outputs`: Validates parent-child module output wiring and inheritance behavior.
 - `test/05-terraform-opentofu-compat`: Validates that the same module runs consistently on Terraform/OpenTofu-compatible syntax.
+- `test/06-drift-detection`: Validates InfraKitchen drift detection. Manages a local file (`hashicorp/local` provider, no cloud) that you can delete to make the resource drift. The `dummy/` modules cannot drift because `terraform_data` has no object outside of tofu.
+- `test/07-drift-reconcile`: Validates the whole drift flow without a cloud (Check drift, Reconcile, Accept, template drift ignore rules): delete or edit the files the module writes on the worker, then run Check drift. See `test/07-drift-reconcile/README.md`.
 
 ## How To Validate In InfraKitchen
 
@@ -69,5 +71,7 @@ Use this flow for any module in `demo/`, `dummy/`, `executors/` or `test/`:
 - `test/03-intentional-failure`: Provision fails predictably, status is set to error, and logs expose the root cause.
 - `test/04-parent-child-outputs`: Parent outputs are available for child input mapping, and child provisioning succeeds using inherited values.
 - `test/05-terraform-opentofu-compat`: Module provisions successfully with InfraKitchen's OpenTofu runtime and only uses shared Terraform/OpenTofu language features.
+- `test/06-drift-detection`: With the "Drift Detection" feature flag on, "Check drift" reports `In sync` after provisioning. After `rm /tmp/ik-drift/drift-test.txt` on the worker machine it reports `Drifted` and the Drift tab lists `local_file.managed`. Apply recreates the file and the next check is `In sync` again.
+- `test/07-drift-reconcile`: Check drift reports the deleted or edited files as drifted without changing the resource status; Reconcile (apply) restores them and the next check is in sync.
 
 If you want a strict dual-engine check for `test/05-terraform-opentofu-compat`, run the same module once with local `terraform` CLI and once with local `tofu` CLI outside InfraKitchen, then compare plan/apply/output behavior.
